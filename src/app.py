@@ -135,6 +135,7 @@ st.set_page_config(
 
 st.sidebar.title("Lyzatech")
 st.sidebar.caption("Automotive Parts Intelligence Platform")
+st.sidebar.image("assets/lyzatech-logo.png", width=150)
 
 st.title("Lyzatech Automotive Interchange Platform")
 
