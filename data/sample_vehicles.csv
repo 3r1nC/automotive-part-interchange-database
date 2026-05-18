@@ -1,0 +1,5 @@
+vehicle_id,year,make,model,engine,fuel_type
+1,2020,Ford,F-150,5.0L V8,Gas
+2,2019,Ford,Mustang,5.0L V8,Gas
+3,2021,Lincoln,Navigator,3.5L V6 TT,Gas
+4,2018,Ford,Expedition,3.5L EcoBoost,Gas
