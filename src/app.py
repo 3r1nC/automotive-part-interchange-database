@@ -124,11 +124,14 @@ def search_parts(part_number="", year=None, make=None, model=None):
 
 
 st.set_page_config(
-    page_title="Automotive Part Interchange Database",
+    page_title="Lyzatech Automotive Interchange Platform",
     layout="wide"
 )
 
-st.title("Automotive Part Interchange Database")
+st.sidebar.title("Lyzatech")
+st.sidebar.caption("Automotive Parts Intelligence Platform")
+
+st.title("Lyzatech Automotive Interchange Platform")
 
 st.write(
     "Search OE, OEM, and aftermarket part numbers, or filter by vehicle "
@@ -196,5 +199,5 @@ if search_clicked:
 st.divider()
 
 st.caption(
-    "Prototype database application built with Python, SQLite, Pandas, and Streamlit."
+    "Built by Lyzatech • Prototype Interchange Intelligence Platform"
 )
