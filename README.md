@@ -1,46 +1,109 @@
 # Automotive Part Interchange Database
 
-Prototype automotive interchange database for cross-referencing OE, OEM, and aftermarket automotive parts across multiple vehicle applications.
+A prototype automotive part interchange system built with Python, SQLite, Pandas, and Streamlit.
+
+This application demonstrates how OE, OEM, and aftermarket automotive parts can be cross-referenced across multiple vehicle applications using relational database design and search functionality.
+
+---
+
+## Live Demo
+
+Coming Soon
+
+---
+
+## GitHub Repository
+
+https://github.com/3r1nC/automotive-part-interchange-database
+
+---
+
+## Project Overview
+
+The Automotive Part Interchange Database allows users to:
+
+- Search by OE part number
+- Search by aftermarket part number
+- Filter by vehicle year, make, and model
+- View compatible vehicle fitment
+- Cross-reference equivalent aftermarket brands
+- Demonstrate automotive interchange database architecture
+
+The project was designed as a scalable prototype that could later evolve into:
+
+- Inventory management systems
+- Automotive catalog platforms
+- Supplier lookup tools
+- Internal dealership tooling
+- SaaS interchange platforms
+- API-driven fitment services
 
 ---
 
 ## Features
 
-- Search by OE part number
-- Search by aftermarket number
-- Vehicle fitment lookup
-- SQLite relational database
-- Streamlit search interface
+### Vehicle Fitment Search
+Search compatible vehicles using:
+- Year
+- Make
+- Model
 
----
+### Part Number Search
+Search:
+- OE part numbers
+- OEM part numbers
+- Aftermarket interchange numbers
 
-## Tech Stack
-
-- Python
-- SQLite
-- Pandas
-- Streamlit
-
----
-
-## Database Structure
-
-### Tables
+### Relational Database Design
+The system uses normalized relational tables:
 - vehicles
 - parts
-- cross_references
 - fitment
+- cross_references
+
+### Dynamic Filtering
+Dropdowns dynamically filter available:
+- Makes
+- Models
+
+based on vehicle selections.
+
+### Streamlit Web Interface
+Interactive web UI built with Streamlit.
 
 ---
 
 ## Application Preview
 
-![Search Results](assetssearch-results-autotype.png)
+### Search Results
+
+![Search Results](assets/search-results-autotype.png)
 
 ---
 
-## Running the Application
+## Tech Stack
 
-```bash
-pip install -r requirements.txt
-streamlit run src/app.py
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| SQLite | Relational database |
+| Pandas | Data import and querying |
+| Streamlit | Web application UI |
+| Git/GitHub | Version control |
+| CSV | Sample data storage |
+
+---
+
+## Project Structure
+
+```text
+automotive-part-interchange-database/
+│
+├── assets/
+├── data/
+├── database/
+├── docs/
+├── src/
+├── tests/
+├── README.md
+└── requirements.txt
