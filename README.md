@@ -35,7 +35,7 @@ Prototype automotive interchange database for cross-referencing OE, OEM, and aft
 
 ## Application Preview
 
-![Search Results](assets/search-results.png)
+![Search Results](assetssearch-results-autotype.png)
 
 ---
 
