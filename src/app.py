@@ -4,8 +4,13 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from import_data import main as initialize_database
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "database" / "interchange.db"
+
+if not DB_PATH.exists():
+    initialize_database()
 
 
 def get_years():
