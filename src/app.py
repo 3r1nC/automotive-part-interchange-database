@@ -8,18 +8,63 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "database" / "interchange.db"
 
 
-def get_filter_options(column_name, table_name):
-    query = f"""
-    SELECT DISTINCT {column_name}
-    FROM {table_name}
-    WHERE {column_name} IS NOT NULL
-    ORDER BY {column_name};
+def get_years():
+    query = """
+    SELECT DISTINCT year
+    FROM vehicles
+    ORDER BY year;
     """
 
     with sqlite3.connect(DB_PATH) as conn:
-        results = pd.read_sql_query(query, conn)
+        df = pd.read_sql_query(query, conn)
 
-    return results[column_name].tolist()
+    return df["year"].tolist()
+
+
+def get_makes(year=None):
+    query = """
+    SELECT DISTINCT make
+    FROM vehicles
+    WHERE 1=1
+    """
+
+    params = []
+
+    if year:
+        query += " AND year = ?"
+        params.append(year)
+
+    query += " ORDER BY make;"
+
+    with sqlite3.connect(DB_PATH) as conn:
+        df = pd.read_sql_query(query, conn, params=params)
+
+    return df["make"].tolist()
+
+
+def get_models(year=None, make=None):
+    query = """
+    SELECT DISTINCT model
+    FROM vehicles
+    WHERE 1=1
+    """
+
+    params = []
+
+    if year:
+        query += " AND year = ?"
+        params.append(year)
+
+    if make:
+        query += " AND make = ?"
+        params.append(make)
+
+    query += " ORDER BY model;"
+
+    with sqlite3.connect(DB_PATH) as conn:
+        df = pd.read_sql_query(query, conn, params=params)
+
+    return df["model"].tolist()
 
 
 def search_parts(part_number="", year=None, make=None, model=None):
@@ -66,6 +111,14 @@ def search_parts(part_number="", year=None, make=None, model=None):
         query += " AND v.model = ?"
         params.append(model)
 
+    query += """
+    ORDER BY
+        v.year DESC,
+        v.make,
+        v.model,
+        p.part_type;
+    """
+
     with sqlite3.connect(DB_PATH) as conn:
         return pd.read_sql_query(query, conn, params=params)
 
@@ -78,15 +131,15 @@ st.set_page_config(
 st.title("Automotive Part Interchange Database")
 
 st.write(
-    "Search OE, OEM, and aftermarket part numbers "
-    "and filter by vehicle information."
+    "Search OE, OEM, and aftermarket part numbers, or filter by vehicle "
+    "to identify compatible automotive parts."
 )
 
-# FILTERS
+st.divider()
 
-years = get_filter_options("year", "vehicles")
-makes = get_filter_options("make", "vehicles")
-models = get_filter_options("model", "vehicles")
+st.subheader("Vehicle Filters")
+
+years = get_years()
 
 col1, col2, col3 = st.columns(3)
 
@@ -96,11 +149,20 @@ with col1:
         options=[""] + years
     )
 
+makes = get_makes(
+    year=selected_year if selected_year != "" else None
+)
+
 with col2:
     selected_make = st.selectbox(
         "Make",
         options=[""] + makes
     )
+
+models = get_models(
+    year=selected_year if selected_year != "" else None,
+    make=selected_make if selected_make != "" else None
+)
 
 with col3:
     selected_model = st.selectbox(
@@ -108,14 +170,18 @@ with col3:
         options=[""] + models
     )
 
+st.subheader("Part Number Search")
+
 part_number = st.text_input(
-    "Enter OE or aftermarket part number"
+    "Enter OE or aftermarket part number",
+    placeholder="Example: FL-500S or PH10575"
 )
 
-if st.button("Search"):
+search_clicked = st.button("Search")
 
+if search_clicked:
     results = search_parts(
-        part_number=part_number,
+        part_number=part_number.strip(),
         year=selected_year if selected_year != "" else None,
         make=selected_make if selected_make != "" else None,
         model=selected_model if selected_model != "" else None
@@ -126,3 +192,9 @@ if st.button("Search"):
         st.dataframe(results, use_container_width=True)
     else:
         st.warning("No matching records found.")
+
+st.divider()
+
+st.caption(
+    "Prototype database application built with Python, SQLite, Pandas, and Streamlit."
+)
