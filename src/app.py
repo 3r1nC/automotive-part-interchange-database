@@ -140,6 +140,58 @@ div.stDownloadButton > button {{
     border-radius: 10px;
     font-weight: 700;
 }}
+
+[data-testid="stDataFrame"] {{
+    overflow-x: auto;
+}}
+
+@media (max-width: 768px) {{
+    .block-container {{
+        padding: 1rem;
+        max-width: 100%;
+    }}
+
+    .hero {{
+        padding: 1.5rem;
+        border-radius: 16px;
+        background-position: center;
+    }}
+
+    .hero h1 {{
+        font-size: 2rem;
+        line-height: 1.15;
+    }}
+
+    .hero p {{
+        font-size: .95rem;
+    }}
+
+    .metric-row {{
+        grid-template-columns: 1fr;
+        gap: .75rem;
+    }}
+
+    .metric-card {{
+        padding: .85rem;
+    }}
+
+    .metric-value {{
+        font-size: 1.4rem;
+    }}
+
+    .metric-label {{
+        font-size: .8rem;
+    }}
+
+    div.stButton > button {{
+        width: 100%;
+        margin-bottom: .5rem;
+    }}
+
+    div.stDownloadButton > button {{
+        width: 100%;
+    }}
+}}
 </style>
 """)
 
@@ -333,7 +385,7 @@ with st.container(border=True):
 
     years = get_years()
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1, 1, 1], gap="medium")
 
     with col1:
         selected_year = st.selectbox(
@@ -371,7 +423,7 @@ with st.container(border=True):
         key="part_number",
     )
 
-    button_col1, button_col2, button_col3 = st.columns([1.45, 1, 4])
+    button_col1, button_col2 = st.columns([1, 1], gap="small")
 
     with button_col1:
         search_clicked = st.button("🔎 Search Interchange Database")
@@ -381,12 +433,13 @@ with st.container(border=True):
 
 
 if search_clicked:
-    results = search_parts(
-        part_number=part_number.strip(),
-        year=selected_year if selected_year != "All Years" else None,
-        make=selected_make if selected_make != "All Makes" else None,
-        model=selected_model if selected_model != "All Models" else None,
-    )
+    with st.spinner("Searching interchange database..."):
+        results = search_parts(
+            part_number=part_number.strip(),
+            year=selected_year if selected_year != "All Years" else None,
+            make=selected_make if selected_make != "All Makes" else None,
+            model=selected_model if selected_model != "All Models" else None,
+        )
 
     with st.container(border=True):
         if not results.empty:
@@ -408,7 +461,19 @@ if search_clicked:
             with result_col3:
                 st.button("⧉ Copy Results")
 
-            st.dataframe(results, width="stretch", hide_index=True)
+            mobile_results = results[
+                [
+                    "Part Type",
+                    "OE Part Number",
+                    "Cross Reference Brand",
+                    "Cross Reference Part Number",
+                    "Year",
+                    "Make",
+                    "Model",
+                ]
+            ]
+
+            st.dataframe(mobile_results, width="stretch", hide_index=True)
         else:
             st.warning("No matching records found.")
 else:
